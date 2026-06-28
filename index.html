@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gyanodaya Digital Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#1B1A35;
+    --twilight:#4A2E55;
+    --saffron:#E8762C;
+    --gold:#F2A93C;
+    --cream:#FBF3E6;
+    --ink:#2A2420;
+    --ink-soft:#5C5347;
+    --line:#E4D9C6;
+    --max:1180px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  svg{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px;}
+  .font-display{font-family:'Fraunces',serif;}
+  .font-deva{font-family:'Noto Sans Devanagari',sans-serif;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;font-size:.72rem;font-weight:500;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:100px;font-weight:600;font-size:.95rem;border:1px solid transparent;cursor:pointer;transition:transform .25s ease, box-shadow .25s ease;position:relative;overflow:hidden;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn-solid{background:var(--gold);color:var(--night);}
+  .btn-solid:hover{box-shadow:0 10px 24px -8px rgba(242,169,60,.6);}
+  .btn-solid::after{content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);transition:left .6s ease;}
+  .btn-solid:hover::after{left:140%;}
+  .btn-outline{border-color:rgba(255,255,255,.45);color:#fff;}
+  .btn-outline.dark{border-color:rgba(42,36,32,.3);color:var(--ink);}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in-view{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+    .reveal{opacity:1;transform:none;}
+  }
+
+  /* ---------- header ---------- */
+  .site-header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(27,26,53,.62);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.08);}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;max-width:var(--max);margin:0 auto;}
+  .logo{display:flex;flex-direction:column;line-height:1;color:#fff;}
+  .logo-en{font-family:'Fraunces',serif;font-weight:600;font-size:1.3rem;}
+  .logo-hi{font-family:'Noto Sans Devanagari',sans-serif;font-size:.68rem;letter-spacing:.08em;color:var(--gold);margin-top:3px;}
+  .nav-links{display:flex;gap:32px;}
+  .nav-links a{position:relative;color:rgba(255,255,255,.85);font-size:.92rem;font-weight:500;transition:color .2s;padding-bottom:4px;}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1.5px;background:var(--gold);transition:width .25s ease;}
+  .nav-links a:hover{color:var(--gold);}
+  .nav-links a:hover::after{width:100%;}
+  .header-cta{display:flex;align-items:center;gap:14px;}
+  .header-cta .btn{padding:10px 22px;font-size:.85rem;}
+  .menu-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+  .menu-toggle span{width:22px;height:2px;background:#fff;border-radius:2px;}
+  .mobile-nav{display:none;}
+  @media (max-width:860px){
+    .nav-links{display:none;}
+    .menu-toggle{display:flex;}
+    .header-cta .btn-outline{display:none;}
+    .mobile-nav{display:flex;flex-direction:column;gap:18px;position:fixed;top:68px;left:0;right:0;background:var(--night);padding:28px;transform:translateY(-110%);transition:transform .3s ease;z-index:49;border-bottom:1px solid rgba(255,255,255,.1);}
+    .mobile-nav.open{transform:translateY(0);}
+    .mobile-nav a{color:#fff;font-size:1.05rem;font-weight:500;}
+  }
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;overflow:hidden;min-height:100vh;display:flex;align-items:center;background:linear-gradient(180deg,var(--night) 0%, var(--twilight) 55%, var(--saffron) 100%);background-size:100% 130%;animation:skyDrift 16s ease-in-out infinite alternate;color:#fff;padding-top:100px;}
+  @keyframes skyDrift{0%{background-position:50% 0%;}100%{background-position:50% 14%;}}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;width:100%;}
+  .hero-eyebrow{color:var(--gold);margin-bottom:22px;display:flex;align-items:center;gap:10px;opacity:0;animation:fadeUp .7s ease .1s forwards;}
+  .hero-eyebrow .deva{font-family:'Noto Sans Devanagari',sans-serif;font-size:.95rem;letter-spacing:0;}
+  .hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.6rem,5.2vw,4.4rem);line-height:1.04;letter-spacing:-.01em;margin-bottom:24px;opacity:0;animation:fadeUp .7s ease .25s forwards;}
+  .hero h1 .rise{background:linear-gradient(90deg,var(--gold),var(--saffron));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p{font-size:1.1rem;line-height:1.6;color:rgba(255,255,255,.85);max-width:480px;margin-bottom:34px;opacity:0;animation:fadeUp .7s ease .4s forwards;}
+  .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp .7s ease .55s forwards;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+  .hero-art{position:relative;height:480px;}
+  @media (max-width:980px){
+    .hero-grid{grid-template-columns:1fr;text-align:center;}
+    .hero p{margin-left:auto;margin-right:auto;}
+    .hero-ctas{justify-content:center;}
+    .hero-art{height:340px;order:-1;}
+    .hero-eyebrow{justify-content:center;}
+  }
+  .ray{transform-origin:300px 430px;animation:spin 90s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .sunbody{animation:glow 4s ease-in-out infinite;}
+  @keyframes glow{0%,100%{filter:drop-shadow(0 0 10px rgba(242,169,60,.55));}50%{filter:drop-shadow(0 0 26px rgba(242,169,60,.85));}}
+  .mote{animation:float 6s ease-in-out infinite;}
+  .mote:nth-child(2){animation-delay:1.2s;}
+  .mote:nth-child(3){animation-delay:2.4s;}
+  .mote:nth-child(4){animation-delay:.6s;}
+  @keyframes float{0%,100%{transform:translateY(0);opacity:.5;}50%{transform:translateY(-14px);opacity:1;}}
+  .scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.12em;color:rgba(255,255,255,.55);text-transform:uppercase;}
+
+  /* ---------- section shells ---------- */
+  section{padding:120px 0;}
+  .section-head{max-width:640px;margin-bottom:56px;}
+  .section-head .eyebrow{color:var(--saffron);margin-bottom:14px;}
+  .section-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,3.4vw,2.8rem);line-height:1.12;}
+  .section-head p{margin-top:16px;color:var(--ink-soft);font-size:1.05rem;line-height:1.6;}
+
+  /* ---------- about ---------- */
+  .about-body{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+  .about-body p{font-size:1.08rem;line-height:1.75;color:var(--ink-soft);}
+  .chips{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:100px;padding:12px 20px;display:flex;align-items:center;gap:10px;font-size:.92rem;font-weight:600;transition:transform .25s ease, box-shadow .25s ease;}
+  .chip:hover{transform:translateY(-3px);box-shadow:0 10px 20px -12px rgba(42,36,32,.3);}
+  .chip svg{width:18px;height:18px;color:var(--saffron);}
+  .chip.price{background:var(--night);color:#fff;}
+  .chip.price svg{color:var(--gold);}
+  @media (max-width:860px){.about-body{grid-template-columns:1fr;gap:40px;}}
+
+  /* ---------- amenities ---------- */
+  .amenities{background:linear-gradient(180deg,var(--cream),#F6EBDA);}
+  .amenity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .amenity-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px 24px;position:relative;overflow:hidden;transition:transform .3s ease, box-shadow .3s ease;}
+  .amenity-card::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--spine,var(--saffron));}
+  .amenity-card:hover{transform:translateY(-6px);box-shadow:0 18px 32px -16px rgba(42,36,32,.22);}
+  .amenity-card .icon-ring{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb, var(--spine,var(--saffron)) 14%, white);margin-bottom:18px;transition:transform .35s ease;}
+  .amenity-card:hover .icon-ring{transform:scale(1.1) rotate(-6deg);}
+  .amenity-card .icon-ring svg{width:24px;height:24px;color:var(--spine,var(--saffron));}
+  .amenity-card h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.1rem;margin-bottom:8px;}
+  .amenity-card p{font-size:.92rem;color:var(--ink-soft);line-height:1.55;}
+  @media (max-width:980px){.amenity-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.amenity-grid{grid-template-columns:1fr;}}
+
+  /* ---------- how to join ---------- */
+  .how-path{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-top:30px;}
+  .how-path::before{content:"";position:absolute;top:26px;left:8%;right:8%;height:2px;background:repeating-linear-gradient(90deg,var(--gold) 0 10px, transparent 10px 18px);z-index:0;}
+  @media (max-width:860px){.how-path{grid-template-columns:1fr;}.how-path::before{display:none;}}
+  .step{position:relative;z-index:1;}
+  .step-num{width:52px;height:52px;border-radius:50%;background:var(--night);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;font-size:1.2rem;margin-bottom:20px;}
+  .step h3{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:600;margin-bottom:10px;}
+  .step p{color:var(--ink-soft);font-size:.96rem;line-height:1.6;}
+
+  /* ---------- membership (single flat plan) ---------- */
+  .membership{background:var(--night);color:#fff;}
+  .membership .section-head h2{color:#fff;}
+  .membership .section-head p{color:rgba(255,255,255,.65);}
+  .membership .eyebrow{color:var(--gold);}
+  .plan-solo{max-width:480px;margin:0 auto;background:linear-gradient(165deg,rgba(242,169,60,.16),rgba(232,118,44,.07));border:1px solid var(--gold);border-radius:22px;padding:44px 38px;text-align:center;}
+  .plan-solo .tag{display:inline-block;background:var(--gold);color:var(--night);font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:6px 16px;border-radius:100px;margin-bottom:18px;}
+  .plan-solo .price{font-family:'Fraunces',serif;font-weight:700;font-size:3.4rem;color:var(--gold);line-height:1;}
+  .plan-solo .price span{font-family:'Inter',sans-serif;font-size:1rem;color:rgba(255,255,255,.6);font-weight:400;}
+  .plan-solo .sub{color:rgba(255,255,255,.7);font-size:.95rem;margin:10px 0 28px;}
+  .plan-solo ul{display:inline-block;text-align:left;margin-bottom:0;}
+  .plan-solo li{font-size:.96rem;color:rgba(255,255,255,.85);padding:9px 0;display:flex;gap:10px;align-items:flex-start;}
+  .plan-solo li svg{width:18px;height:18px;color:var(--gold);flex-shrink:0;margin-top:2px;}
+
+  /* ---------- testimonials ---------- */
+  .quotes{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  .quote-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:34px;}
+  .quote-mark{font-family:'Fraunces',serif;font-size:3rem;color:var(--gold);line-height:1;margin-bottom:6px;}
+  .quote-card p.q{font-family:'Fraunces',serif;font-size:1.12rem;line-height:1.55;margin-bottom:18px;}
+  .quote-who{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
+  @media (max-width:760px){.quotes{grid-template-columns:1fr;}}
+
+  /* ---------- contact ---------- */
+  .cta-section{background:linear-gradient(180deg,var(--twilight),var(--night));color:#fff;text-align:center;}
+  .cta-section h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,4vw,3rem);margin-bottom:18px;}
+  .cta-section > .wrap > p{color:rgba(255,255,255,.7);max-width:480px;margin:0 auto 0;font-size:1.05rem;}
+  .contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:64px;text-align:left;}
+  .contact-card{border-top:1px solid rgba(255,255,255,.15);padding-top:18px;}
+  .contact-card .eyebrow{color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+  .contact-card .eyebrow svg{width:14px;height:14px;}
+  .contact-card p{color:rgba(255,255,255,.85);font-size:1rem;line-height:1.5;}
+  @media (max-width:860px){.contact-grid{grid-template-columns:1fr;text-align:center;}.contact-card{text-align:center;}.contact-card .eyebrow{justify-content:center;}}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--night);color:rgba(255,255,255,.6);padding:48px 0 28px;}
+  .footer-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:32px;margin-bottom:32px;}
+  .footer-nav{display:flex;gap:26px;flex-wrap:wrap;}
+  .footer-nav a{font-size:.9rem;color:rgba(255,255,255,.65);}
+  .footer-nav a:hover{color:var(--gold);}
+  .footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:22px;font-size:.82rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .footer-bottom .font-deva{color:var(--gold);}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <span class="logo-en">Gyanodaya</span>
+      <span class="logo-hi font-deva">ज्ञानोदय · digital library</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#amenities">Amenities</a>
+      <a href="#how">How to Join</a>
+      <a href="#membership">Membership</a>
+      <a href="#about">About</a>
+    </nav>
+    <div class="header-cta">
+      <a href="#contact" class="btn btn-outline">Visit</a>
+      <a href="#membership" class="btn btn-solid">View Membership</a>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#amenities">Amenities</a>
+    <a href="#how">How to Join</a>
+    <a href="#membership">Membership</a>
+    <a href="#about">About</a>
+    <a href="#contact">Visit</a>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="hero-eyebrow eyebrow"><span class="deva font-deva">ज्ञानोदय</span> · DIGITAL LIBRARY</div>
+      <h1>Knowledge <span class="rise">rises</span> here.</h1>
+      <p>An air-conditioned, RO-water reading space in Sohawal, Ayodhya — built for quiet, focused study, every single day.</p>
+      <div class="hero-ctas">
+        <a href="#membership" class="btn btn-solid">View Membership</a>
+        <a href="#contact" class="btn btn-outline">Visit Us</a>
+      </div>
+    </div>
+
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 600 480" width="100%" height="100%" preserveAspectRatio="xMidYMax meet">
+        <defs>
+          <radialGradient id="sunGlow" cx="50%" cy="100%" r="65%">
+            <stop offset="0%" stop-color="#F2A93C" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#F2A93C" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="sunBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#F8C870"/>
+            <stop offset="100%" stop-color="#E8762C"/>
+          </linearGradient>
+        </defs>
+        <circle cx="300" cy="430" r="220" fill="url(#sunGlow)"/>
+        <g class="ray" stroke="#F2A93C" stroke-width="3" stroke-linecap="round" opacity="0.55">
+          <line x1="300" y1="430" x2="300" y2="170" transform="rotate(0 300 430)"/>
+          <line x1="300" y1="430" x2="300" y2="190" transform="rotate(30 300 430)"/>
+          <line x1="300" y1="430" x2="300" y2="160" transform="rotate(60 300 430)"/>
+          <line x1="300" y1="430" x2="300" y2="195" transform="rotate(90 300 430)"/>
+          <line x1="300" y1="430" x2="300" y2="165" transform="rotate(120 300 430)"/>
+          <line x1="300" y1="430" x2="300" y2="185" transform="rotate(150 300 430)"/>
+          <line x1="300" y1="430" x2="300" y2="175" transform="rotate(180 300 430)"/>
+        </g>
+        <circle class="sunbody" cx="300" cy="430" r="120" fill="url(#sunBody)"/>
+        <g fill="#F8E7C4" class="mote"><circle cx="150" cy="200" r="3"/></g>
+        <g fill="#F8E7C4" class="mote"><circle cx="430" cy="150" r="2.4"/></g>
+        <g fill="#F8E7C4" class="mote"><circle cx="480" cy="260" r="3.4"/></g>
+        <g fill="#F8E7C4" class="mote"><circle cx="110" cy="300" r="2.2"/></g>
+        <path d="M70 460 C 150 410, 250 400, 300 430 C 350 400, 450 410, 530 460 L 530 478 C 450 448, 350 438, 300 462 C 250 438, 150 448, 70 478 Z" fill="#1B1A35"/>
+        <path d="M300 430 L300 462" stroke="#1B1A35" stroke-width="3"/>
+        <g stroke="#FBF3E6" stroke-opacity="0.18" stroke-width="2" fill="none">
+          <path d="M95 452 C 160 415, 240 408, 296 432"/>
+          <path d="M120 462 C 175 432, 245 424, 296 446"/>
+          <path d="M505 452 C 440 415, 360 408, 304 432"/>
+          <path d="M480 462 C 425 432, 355 424, 304 446"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll to explore ↓</div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="about-body">
+      <div class="reveal">
+        <div class="eyebrow" style="color:var(--saffron);margin-bottom:14px;">ABOUT US</div>
+        <h2 class="font-display" style="font-size:clamp(1.9rem,3vw,2.5rem);font-weight:600;line-height:1.15;margin-bottom:20px;">A calm place to focus, every day.</h2>
+        <p>Gyanodaya Digital Library is a quiet, air-conditioned reading space in Sohawal, Ayodhya — built for students and aspirants who need somewhere peaceful to study, away from the noise and heat at home. Clean RO drinking water, comfortable seating, and an environment made for long, focused hours.</p>
+      </div>
+      <div class="chips reveal">
+        <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M4.5 6 19.5 18M4.5 18 19.5 6M2 12h20"/></svg>AC Cooled Hall</div>
+        <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2s7 8 7 13a7 7 0 0 1-14 0c0-5 7-13 7-13Z"/></svg>RO Drinking Water</div>
+        <div class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20c4-10 8-14 8-14s4 4 8 14"/><path d="M4 20h16"/></svg>Peaceful Environment</div>
+        <div class="chip price"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9 9.5h4.5a1.5 1.5 0 0 1 0 3H9m0 0h6m-6 0v3m0-6V8"/></svg>₹450 / Month</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AMENITIES ===== -->
+<section class="amenities" id="amenities">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">AMENITIES</div>
+      <h2>Everything you need to focus.</h2>
+      <p>A few small comforts make a few extra hours of study possible.</p>
+    </div>
+    <div class="amenity-grid">
+      <div class="amenity-card reveal" style="--spine:#3F6FA8;">
+        <div class="icon-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M4.5 6 19.5 18M4.5 18 19.5 6M2 12h20"/></svg></div>
+        <h3>AC Hall</h3>
+        <p>Fully air-conditioned seating, comfortable through every season.</p>
+      </div>
+      <div class="amenity-card reveal" style="--spine:#3E8E8B;">
+        <div class="icon-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2s7 8 7 13a7 7 0 0 1-14 0c0-5 7-13 7-13Z"/></svg></div>
+        <h3>RO Drinking Water</h3>
+        <p>Clean, filtered water available on-site, always.</p>
+      </div>
+      <div class="amenity-card reveal" style="--spine:#5C8A4A;">
+        <div class="icon-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20c4-10 8-14 8-14s4 4 8 14"/><path d="M4 20h16"/></svg></div>
+        <h3>Peaceful Environment</h3>
+        <p>A quiet, distraction-free space built for deep focus.</p>
+      </div>
+      <div class="amenity-card reveal" style="--spine:#A85B3F;">
+        <div class="icon-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19v-5a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v5M5 19h14M7 11V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"/></svg></div>
+        <h3>Comfortable Seating</h3>
+        <p>Dedicated desks and chairs designed for long study sessions.</p>
+      </div>
+      <div class="amenity-card reveal" style="--spine:#7A5FB5;">
+        <div class="icon-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 12 2 2 10-10M5 19l2 2 10-10"/></svg></div>
+        <h3>Clean &amp; Hygienic</h3>
+        <p>A well-maintained space, cleaned and cared for every day.</p>
+      </div>
+      <div class="amenity-card reveal" style="--spine:#D4A02C;">
+        <div class="icon-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.4.3.6.8.6 1.2h6c0-.4.2-.9.6-1.2A6 6 0 0 0 12 3Z"/></svg></div>
+        <h3>Well-Lit Reading Area</h3>
+        <p>Bright, eye-friendly lighting for day and night study.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW TO JOIN ===== -->
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">GETTING STARTED</div>
+      <h2>Three steps to your seat.</h2>
+    </div>
+    <div class="how-path">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h3>Visit or call us</h3>
+        <p>Come by Sardar Ka Purwa, Sohawal, or call us to check seat availability.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <h3>Pay your membership</h3>
+        <p>₹450 per month — one flat price for every member, no hidden charges.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <h3>Start studying</h3>
+        <p>Walk in any day and take your seat, in a calm space built for focus.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MEMBERSHIP ===== -->
+<section class="membership" id="membership">
+  <div class="wrap">
+    <div class="section-head reveal" style="margin:0 auto 56px;text-align:center;">
+      <div class="eyebrow">MEMBERSHIP</div>
+      <h2>One simple plan, for everyone.</h2>
+      <p style="margin-left:auto;margin-right:auto;">No tiers, no fine print — the same flat price for every member.</p>
+    </div>
+    <div class="plan-solo reveal">
+      <span class="tag">Flat Rate</span>
+      <div class="price">₹450 <span>/ month</span></div>
+      <p class="sub">Billed monthly · same price for every member</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 6"/></svg> AC hall access</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 6"/></svg> RO drinking water</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 6"/></svg> Peaceful study environment</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 6"/></svg> Comfortable, dedicated seating</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 6"/></svg> Daily access</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testimonials">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">FROM OUR MEMBERS</div>
+      <h2>Real seats, real focus.</h2>
+    </div>
+    <div class="quotes">
+      <div class="quote-card reveal">
+        <div class="quote-mark">"</div>
+        <p class="q">The AC and the quiet make a real difference — I study twice as long here as I ever could at home.</p>
+        <div class="quote-who">Priya · B.Ed Student</div>
+      </div>
+      <div class="quote-card reveal">
+        <div class="quote-mark">"</div>
+        <p class="q">Clean water, a comfortable chair, and no noise. Exactly what exam prep needed.</p>
+        <div class="quote-who">Rohan · Civil Services Aspirant</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="cta-section" id="contact">
+  <div class="wrap">
+    <h2 class="reveal">Come take your seat.</h2>
+    <p class="reveal">Drop by, call, or write to us — we'll help you get started.</p>
+    <div class="contact-grid">
+      <div class="contact-card reveal">
+        <div class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2s7 8 7 13a7 7 0 0 1-14 0c0-5 7-13 7-13Z"/></svg>VISIT</div>
+        <p>Gyanodaya Digital Library<br>Sardar Ka Purwa, Near Powerhouse<br>Deorhi, Sohawal, Ayodhya</p>
+      </div>
+      <div class="contact-card reveal">
+        <div class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.99.36 1.97.67 2.91a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.94.31 1.92.54 2.91.67A2 2 0 0 1 22 16.92Z"/></svg>CALL</div>
+        <p>9554959360</p>
+      </div>
+      <div class="contact-card reveal">
+        <div class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m4 5 8 7 8-7"/></svg>EMAIL</div>
+        <p>atul19852@gmail.com</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="logo">
+        <span class="logo-en" style="color:#fff;">Gyanodaya</span>
+        <span class="logo-hi font-deva">ज्ञानोदय · digital library</span>
+      </div>
+      <nav class="footer-nav">
+        <a href="#amenities">Amenities</a>
+        <a href="#how">How to Join</a>
+        <a href="#membership">Membership</a>
+        <a href="#about">About</a>
+        <a href="#contact">Visit</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Gyanodaya Digital Library. All rights reserved.</span>
+      <span class="font-deva">पढ़ते रहें, बढ़ते रहें</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileNav = document.getElementById('mobileNav');
+  menuToggle.addEventListener('click', () => {
+    const isOpen = mobileNav.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', isOpen);
+  });
+  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    mobileNav.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+  }));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('in-view'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
